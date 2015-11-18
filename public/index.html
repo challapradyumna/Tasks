@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html ng-app="tasks">
+<head>
+	<title>Todo App</title>
+	<link href='https://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="datepicker.css">
+	
+    <style>
+    body{
+    	font-family: 'Bitter', serif;
+    }
+    h1 ,h2 , h3 ,h4,h5 
+    {
+    	font-family: 'Bitter', serif;
+    }
+        .action{
+        	margin-left:10px;
+        	margin-right: 10px;
+        	margin-top:20px;
+        	height:30px;
+        }
+        #download{
+        	margin-left:10px;
+        	margin-right: 10px;
+        	
+        	height:30px;
+        }
+        .datepickerIcon
+        {
+        	margin-left:10px;
+        	margin-right: 10px;
+        	margin-top:20px;
+        	height:33px;
+        	cursor: pointer;
+        }
+    </style>
+    <script src="jquery.min.js"></script><!-- load jquery -->
+    <script src="angular.min.js"></script><!-- load angular -->
+    <script src="bootstrap.min.js"></script>
+    <script src="bootstrap-datepicker.min.js"></script>
+    
+    <script src="core.js"></script>
+    <script type="text/javascript">
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip(); 
+	   	
+	   	$("#FromDate").datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: "dd/mm/yy"
+                    }).on('show', function(e) {
+        			alert('Date Changed');
+    		});
+	});
+	</script>
+</head>
+<body >
+<nav class="navbar navbar-default" role="navigation">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="#">Title</a>
+	</div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="#">Link</a></li>
+			<li><a href="#">Link</a></li>
+		</ul>
+		<form class="navbar-form navbar-left" role="search">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Search">
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="#">Link</a></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div><!-- /.navbar-collapse -->
+</nav>
+<div class="container" ng-controller="mainController">
+
+        <!-- HEADER AND TODO COUNT -->
+        <div class="" ng-repeat="task in tasks">
+        	
+            <h3 style="display:inline-block;">{{ task.currentText }}
+            	<span ng-show="task.moreTaskText" ng-click="showFullText(task.id)">
+            		<img src="More.png" height="20" title="Show full text" data-toggle="tooltip" data-placement="top" tooltip />
+            	</span>
+            	<span ng-show="task.lessTaskText" ng-click="showLessText(task.id)">
+            		<img src="subtract.png" height="20" title="Show less text" data-toggle="tooltip" data-placement="top" tooltip />
+            	</span>
+            </h3>
+            
+            <div class="pull-right">
+	            <img href="#" src="business12.png" class="action" id ="detail" title="Give Details" data-toggle="tooltip" data-placement="top" tooltip ng-click="details(task.id)" ng-hide="task.detailShow" />
+
+	            <img href="#" src="business12a.png" class="action" id ="detail" title="Give Details" data-toggle="tooltip" data-placement="top" tooltip ng-click="details(task.id)" ng-show="task.detailShow" />
+
+	            <img href="#" src="share53.png" class="action" id ="upload" title="Upload Documents" data-toggle="tooltip" data-placement="top" tooltip ng-click="upload(task.id)" ng-hide="task.uploadShow" />
+
+	            <img href="#" src="share53a.png" class="action" id ="upload" title="Upload Documents" data-toggle="tooltip" data-placement="top" tooltip ng-click="upload(task.id)" ng-show="task.uploadShow" />
+
+	            <img href="#" src="set5a.png" id="#FromDate" class="datepickerIcon"  data-provide="datepicker"
+	            title={{task.remainderTime}} data-toggle="tooltip" data-placement="top" tooltip ng-show="task.remainderShow" />
+
+	            <img href="#" src="set5.png" id="#FromDate" class="datepickerIcon"  data-provide="datepicker"
+	            title={{task.remainderTime}} data-toggle="tooltip" data-placement="top" tooltip ng-hide="task.remainderShow" />
+
+	           
+             </div>
+            <!-- <a href="#" class="btn btn-primary" ng-click="review(task.id)">Review</a> -->
+            <div class="details" ng-show="task.detailShow">
+            <h4>{{task.details}}<h4><br/>
+            	<input type="text" class="form-control form-inline" style="width:80%;display:inline;" value="" ng-model="task.taskDetailsInput" placeholder="Add more details to the task" />
+            	<a class="btn btn-primary pull-right" ng-click="updateDetails(task.id,task._id)">Update</a>
+            <br/>
+            </div>
+            <div class="upload" ng-show="task.uploadShow">
+            <br/>
+            <h4>{{task.uploadDocPath}} <a href="http://etazero.com:8080/{{task.uploadDocPath}}" target="_blank"><img id="download" src="download15.png" /></a></h4> <br/>
+           	<input type="file" class="form-control" style="width:80%;display:inline;" file-model="task.documentUpload"/>
+    		<button class="btn btn-primary pull-right" ng-click="uploadFile(task.id,task._id)">Upload File</button>
+            </div>
+            <!-- <div class="remainder" ng-show="task.remainderShow">Remainder</div> -->
+            <div class="review" ng-show="task.reviewShow">Review</div>
+            <hr/>
+        </div>
+        
+</div>
+ <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Copyright Abc Company</p>
+      </div>
+    </footer>
+</body>
+</html>
